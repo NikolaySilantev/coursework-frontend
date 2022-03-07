@@ -4,6 +4,9 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import MDEditor from '@uiw/react-md-editor';
 import reviewService from "../services/review.service";
+import MyUploader from "./dropzone.component";
+import Dropzone from "react-dropzone-uploader";
+import imageService from "../services/image.service";
 const required = value => {
     if (!value) {
         return (
@@ -27,7 +30,9 @@ export default class NewReview extends Component {
             full_text: "",
             loading: false,
             message: "",
-            successful: false
+            successful: false,
+            images:[],
+            imageUrls:[]
         };
     }
     onChangeTitle(e) {
@@ -55,28 +60,39 @@ export default class NewReview extends Component {
         });
         this.form.validateAll();
         if (this.checkBtn.context._errors.length === 0) {
-            reviewService.postReview(this.state.title, this.state.subject, this.state.full_text).then(
-                (response) => {
-                    this.setState({
-                        message: response.data.message,
-                        loading: false,
-                        successful: true
-                    });
-                },
-                error => {
-                    const resMessage =
-                        (error.response &&
-                            error.response.data &&
-                            error.response.data.message) ||
-                        error.message ||
-                        error.toString();
-                    this.setState({
-                        loading: false,
-                        successful: false,
-                        message: resMessage
-                    });
-                }
-            );
+            let promises = [];
+            this.state.images.map(img => {
+                promises.push(
+                    imageService.upload(img).then(response => {
+                        this.state.imageUrls.push(response.data.url)
+                    })
+                )
+            })
+            Promise.all(promises).then(() => {
+                reviewService.postReview(this.state.title, this.state.subject, this.state.full_text, this.state.imageUrls).then(
+                    (response) => {
+                        this.setState({
+                            message: response.data.message,
+                            loading: false,
+                            successful: true
+                        });
+                    },
+                    error => {
+                        const resMessage =
+                            (error.response &&
+                                error.response.data &&
+                                error.response.data.message) ||
+                            error.message ||
+                            error.toString();
+                        this.setState({
+                            loading: false,
+                            successful: false,
+                            message: resMessage
+                        });
+                    }
+                );
+            });
+
         } else {
             this.setState({
                 loading: false
@@ -84,7 +100,24 @@ export default class NewReview extends Component {
         }
     }
 
+    removeImage(file) {
+        this.setState({images: this.state.images.filter(function(img) {
+                return img !== file
+            })});
+    }
+
     render() {
+        const handleChangeStatus = ({ meta, file }, status) => {
+            console.log(status, meta, file)
+            if (status=="done")
+            {this.setState(
+                {images: [...this.state.images, file]}
+            )
+                console.log("privet");}
+            else if (status=="removed")
+            {this.removeImage(file);
+                console.log("poka");}
+        }
         return (
             <div className="container mt-5 mb-5">
                     <Form
@@ -121,6 +154,16 @@ export default class NewReview extends Component {
                                 name="full_text"
                                 value={this.state.full_text}
                                 onChange={this.onChangeFull_text}
+                            />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="images">Put some images</label>
+                            <Dropzone
+                                name="images"
+                                accept="image/*"
+                                onChangeStatus={handleChangeStatus}
+                                SubmitButtonComponent={null}
+                                autoUpload={false}
                             />
                         </div>
                         <div className="form-group mt-2">

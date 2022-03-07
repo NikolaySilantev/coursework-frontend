@@ -4,11 +4,12 @@ import {API_BASE_URL} from "../constants";
 
 const API_URL = API_BASE_URL + "review/";
 class ReviewService {
-    postReview(title, subject, full_text) {
+    postReview(title, subject, full_text, imageUrls) {
         return axios.post(API_URL + "add", {
             title,
             subject,
-            full_text
+            full_text,
+            imageUrls
         }, { headers: authHeader() })
     }
     getAllReviews() {
