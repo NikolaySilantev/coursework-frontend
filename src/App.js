@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min"
-
 import "./App.css";
 import AuthService from "./services/auth.service";
 import Login from "./components/login.component";
@@ -14,6 +13,7 @@ import BoardModerator from "./components/board-moderator.component";
 import BoardAdmin from "./components/board-admin.component";
 import NewReview from "./components/new-review.component";
 import ReviewComponent from "./components/review-component";
+import ReviewsByTagComponent from "./components/reviews-by-tag.component";
 
 class App extends Component {
   constructor(props) {
@@ -77,7 +77,7 @@ class App extends Component {
             {currentUser ? (
                 <div className="navbar-nav ml-auto">
                   <li className="nav-item">
-                    <Link to={"/profile"} className="nav-link">
+                    <Link to={`/profile/${currentUser.username}`} className="nav-link">
                       {currentUser.username}
                     </Link>
                   </li>
@@ -112,12 +112,13 @@ class App extends Component {
               <Route exact path={["/", "/home"]} component={Home} />
               <Route exact path="/login" component={Login} />
               <Route exact path="/register" component={Register} />
-              <Route exact path="/profile" component={Profile} />
               <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
               <Route path="/add-review" component={NewReview} />
               <Route path="/review/:id" component={ReviewComponent} />
+              <Route path="/profile/:name" component={Profile} />
+              <Route path="/review/:tag" component={ReviewsByTagComponent} />
             </Switch>
           </div>
         </div>

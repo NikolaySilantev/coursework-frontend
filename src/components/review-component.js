@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import ReviewService from "../services/review.service";
 import MarkdownPreview from '@uiw/react-markdown-preview';
-import {image} from "@uiw/react-md-editor";
 
 export default class ReviewComponent extends Component {
     constructor(props) {
@@ -53,7 +52,7 @@ export default class ReviewComponent extends Component {
                             </div>
                             <div className="carousel-inner">
                                 {review.imageUrls.map((image, index)=>
-                                    index==0 && <div key={index} className="carousel-item active">
+                                    index===0 && <div key={index} className="carousel-item active">
                                         <img src={image} className="d-block w-100" alt="..."/>
                                     </div>
                                     ||

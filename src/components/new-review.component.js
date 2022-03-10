@@ -4,9 +4,11 @@ import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import MDEditor from '@uiw/react-md-editor';
 import reviewService from "../services/review.service";
-import MyUploader from "./dropzone.component";
+import '../styles.css'
 import Dropzone from "react-dropzone-uploader";
 import imageService from "../services/image.service";
+import { WithContext as ReactTags } from 'react-tag-input';
+
 const required = value => {
     if (!value) {
         return (
@@ -23,6 +25,10 @@ export default class NewReview extends Component {
         this.onChangeSubject = this.onChangeSubject.bind(this);
         this.onChangeFull_text = this.onChangeFull_text.bind(this);
         this.handlePostReview = this.handlePostReview.bind(this);
+        this.handleDeleteTag=this.handleDeleteTag.bind(this);
+        this.handleAddTag=this.handleAddTag.bind(this);
+        this.handleDragTag=this.handleDragTag.bind(this);
+        this.handleClickTag=this.handleClickTag.bind(this);
 
         this.state = {
             title: "",
@@ -32,7 +38,8 @@ export default class NewReview extends Component {
             message: "",
             successful: false,
             images:[],
-            imageUrls:[]
+            imageUrls:[],
+            tags:[]
         };
     }
     onChangeTitle(e) {
@@ -69,7 +76,7 @@ export default class NewReview extends Component {
                 )
             })
             Promise.all(promises).then(() => {
-                reviewService.postReview(this.state.title, this.state.subject, this.state.full_text, this.state.imageUrls).then(
+                reviewService.postReview(this.state.title, this.state.subject, this.state.full_text, this.state.imageUrls, this.state.tags).then(
                     (response) => {
                         this.setState({
                             message: response.data.message,
@@ -106,18 +113,43 @@ export default class NewReview extends Component {
             })});
     }
 
+    handleDeleteTag (i) {
+        this.setState({tags: this.state.tags.filter((tag, index) => index !== i)})
+    }
+
+    handleAddTag (tag) {
+        this.setState({tags : [...this.state.tags, tag]});
+    }
+
+    handleDragTag(tag, currPos, newPos) {
+        const newTags = this.state.tags.slice();
+
+        newTags.splice(currPos, 1);
+        newTags.splice(newPos, 0, tag);
+
+        this.setState({tags: newTags});
+    }
+
+    handleClickTag(index) {
+        console.log('The tag at index ' + index + ' was clicked');
+    };
+
+
     render() {
         const handleChangeStatus = ({ meta, file }, status) => {
             console.log(status, meta, file)
-            if (status=="done")
-            {this.setState(
+            if (status==="done")
+            this.setState(
                 {images: [...this.state.images, file]}
             )
-                console.log("privet");}
-            else if (status=="removed")
-            {this.removeImage(file);
-                console.log("poka");}
+            else if (status==="removed")
+            this.removeImage(file);
         }
+        const KeyCodes = {
+            comma: 188,
+            enter: 13
+        };
+        const delimiters = [KeyCodes.comma, KeyCodes.enter];
         return (
             <div className="container mt-5 mb-5">
                     <Form
@@ -134,6 +166,7 @@ export default class NewReview extends Component {
                                 name="title"
                                 value={this.state.title}
                                 onChange={this.onChangeTitle}
+                                autoFocus={true}
                                 validations={[required]}
                             />
                         </div>
@@ -155,6 +188,38 @@ export default class NewReview extends Component {
                                 value={this.state.full_text}
                                 onChange={this.onChangeFull_text}
                             />
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="tags">Tags</label>
+                            <div className="app">
+                                <div>
+                                    <ReactTags
+                                        classNames={{
+                                            tags: 'tagsClass',
+                                            tagInput: 'tagInputClass',
+                                            tagInputField: 'form-control',
+                                            selected: 'selectedClass',
+                                            tag: 'tagClass',
+                                            remove: 'removeClass',
+                                            suggestions: 'suggestionsClass',
+                                            activeSuggestion: 'activeSuggestionClass',
+                                            editTagInput: 'editTagInputClass',
+                                            editTagInputField: 'editTagInputField',
+                                            clearAll: 'clearAllClass',
+                                        }}
+                                        tags={this.state.tags}
+                                        delimiters={delimiters}
+                                        handleDelete={this.handleDeleteTag}
+                                        handleAddition={this.handleAddTag}
+                                        handleDrag={this.handleDragTag}
+                                        handleTagClick={this.handleClickTag}
+                                        inputFieldPosition="bottom"
+                                        autocomplete
+                                        autofocus={false}
+                                        validations={[required]}
+                                    />
+                                </div>
+                            </div>
                         </div>
                         <div className="form-group">
                             <label htmlFor="images">Put some images</label>
