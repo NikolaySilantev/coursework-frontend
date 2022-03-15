@@ -1,17 +1,16 @@
-import React, {Component} from "react";
+import React, { Component } from "react";
 import ReviewListComponent from "./review-list-component";
 import ReviewService from "../services/review.service";
-
-export default class ReviewsByTagComponent extends Component {
+export default class SearchComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tag:this.props.match.params.tag,
+            text: this.props.match.params.text,
             reviews: []
         };
     }
     componentDidMount() {
-        ReviewService.getReviewByTag(this.state.tag).then(
+        ReviewService.searchReview(this.state.text).then(
             response => {
                 this.setState({
                     reviews: response.data

@@ -21,7 +21,7 @@ export default class ReviewListComponent extends Component {
                             <div className="card-body">
                                 <img src="https://media1.giphy.com/media/TcdpZwYDPlWXC/giphy.gif" className="card-img-top" alt="..."/>
                                 <Link
-                                    to={`/review/${review.id}`}
+                                    to={`/review/details/${review.id}`}
                                     style={{ textDecoration: 'none' }}
                                     className="link-dark"
                                 >

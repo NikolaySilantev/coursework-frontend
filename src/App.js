@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Switch, Route, Link } from "react-router-dom";
+import Input from "react-validation/build/input";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min"
 import "./App.css";
@@ -11,18 +12,21 @@ import Profile from "./components/profile.component";
 import BoardUser from "./components/board-user.component";
 import BoardModerator from "./components/board-moderator.component";
 import BoardAdmin from "./components/board-admin.component";
-import NewReview from "./components/new-review.component";
 import ReviewComponent from "./components/review-component";
 import ReviewsByTagComponent from "./components/reviews-by-tag.component";
+import ReviewFormComponent from "./components/review-form.component";
+import SearchComponent from "./components/search-component";
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.logOut = this.logOut.bind(this);
+    this.onChangeSearchText = this.onChangeSearchText.bind(this);
     this.state = {
       showModeratorBoard: false,
       showAdminBoard: false,
       currentUser: undefined,
+      searchText: ""
     };
   }
   componentDidMount() {
@@ -37,6 +41,11 @@ class App extends Component {
   }
   logOut() {
     AuthService.logout();
+  }
+  onChangeSearchText(e) {
+    this.setState({
+      searchText: e.target.value
+    });
   }
   render() {
     const { currentUser, showModeratorBoard, showAdminBoard } = this.state;
@@ -106,6 +115,15 @@ class App extends Component {
                   </li>
                 </div>
             )}
+            <div className="d-flex ms-auto">
+              <input
+                  className="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                  value={this.state.searchText}
+                  onChange={this.onChangeSearchText}/>
+                <Link to={"/review/search/" + this.state.searchText} className="btn btn-outline-success">
+                  Search
+                </Link>
+            </div>
           </nav>
           <div className="container mt-3">
             <Switch>
@@ -115,10 +133,16 @@ class App extends Component {
               <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
-              <Route path="/add-review" component={NewReview} />
-              <Route path="/review/:id" component={ReviewComponent} />
-              <Route path="/profile/:name" component={Profile} />
-              <Route path="/review/:tag" component={ReviewsByTagComponent} />
+              <Route path={"/add-review"} component={ReviewFormComponent}/>
+              <Route path={"/review/edit/:id"} render={props => <ReviewFormComponent key={props.location.key} {...props}/>}/>
+              {/*<Route path="/add-review" component={(props) => <ReviewFormComponent {...props} mode={"create"}/>} />*/}
+              {/*<Route path="/review/edit/:id" component={(props) => <ReviewFormComponent {...props} mode={"edit"} key={window.location.pathname}/>} />*/}
+              <Route path="/review/details/:id" component={ReviewComponent} />
+              <Route path="/profile/:name" render={props => <Profile key={props.location.key} {...props}/>}/>
+              {/*Putting current location as key on component Re-render same component on url change in react*/}
+              <Route path="/review/tag/:tag" render={props => <ReviewsByTagComponent key={props.location.key} {...props}/>}/>
+              {/*<Route path="/review/tag/:tag" component={(props) => <ReviewsByTagComponent {...props} key={window.location.pathname}/>} />*/}
+              <Route path="/review/search/:text" render={props => <SearchComponent key={props.location.key} {...props}/>}/>
             </Switch>
           </div>
         </div>
