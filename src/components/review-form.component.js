@@ -8,6 +8,7 @@ import '../styles.css'
 import Dropzone from "react-dropzone-uploader";
 import imageService from "../services/image.service";
 import {WithContext as ReactTags} from 'react-tag-input';
+import tagService from "../services/tag,service";
 
 const required = value => {
     if (!value) {
@@ -41,11 +42,19 @@ export default class ReviewFormComponent extends Component {
             initialImages: [],
             imageUrls: [],
             tags: [],
-            isLoaded: false
+            isLoaded: false,
+            suggestions: []
         };
     }
 
     componentDidMount() {
+        tagService.getAllTags().then(r => {
+            this.setState({
+                suggestions : r.data.map((tag) => {
+                    return {"id": tag.name, "text": tag.name}
+                })
+            })
+        });
         if (this.props.match.params.id) {
             reviewService.getReview(this.props.match.params.id).then((response) => {
                 let review = response.data;
@@ -263,19 +272,10 @@ export default class ReviewFormComponent extends Component {
                             <div>
                                 <ReactTags
                                     classNames={{
-                                        tags: 'tagsClass',
-                                        tagInput: 'tagInputClass',
-                                        tagInputField: 'form-control',
-                                        selected: 'selectedClass',
-                                        tag: 'tagClass',
-                                        remove: 'removeClass',
-                                        suggestions: 'suggestionsClass',
-                                        activeSuggestion: 'activeSuggestionClass',
-                                        editTagInput: 'editTagInputClass',
-                                        editTagInputField: 'editTagInputField',
-                                        clearAll: 'clearAllClass',
+                                        tagInputField: 'form-control'
                                     }}
                                     tags={this.state.tags}
+                                    suggestions={this.state.suggestions}
                                     delimiters={delimiters}
                                     handleDelete={this.handleDeleteTag}
                                     handleAddition={this.handleAddTag}

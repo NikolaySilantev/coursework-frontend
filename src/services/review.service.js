@@ -43,5 +43,9 @@ class ReviewService {
     searchReview(text) {
         return axios.get(API_URL + "search/" + text)
     }
+
+    deleteReview(id) {
+        return axios.delete(API_URL + "delete/" + id, { headers: authHeader() })
+    }
 }
 export default new ReviewService();

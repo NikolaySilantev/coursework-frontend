@@ -5,11 +5,13 @@ import RatingService from "../services/rating.service";
 import AuthService from "../services/auth.service";
 import authService from "../services/auth.service";
 import {Link} from "react-router-dom";
+import redirect from "react-router-dom/es/Redirect";
 
 export default class ReviewComponent extends Component {
     constructor(props) {
         super(props);
-        this.handleClick = this.handleClick.bind(this);
+        this.handleLike = this.handleLike.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
         this.state = {
             id: this.props.match.params.id,
             review: null,
@@ -38,12 +40,25 @@ export default class ReviewComponent extends Component {
         );
     }
 
-    handleClick() {
+    handleLike() {
         RatingService.likeReview(AuthService.getCurrentUser().id, this.state.id).then(
             r => this.setState({
                 message: r.data
         }))
     }
+
+    handleDelete() {
+        ReviewService.deleteReview(this.state.id).then(
+            r => {
+                this.setState({
+                    message: r.data
+                })
+                this.props.history.push("/home");
+                window.location.reload();
+            })
+
+    }
+
 
     render() {
         const review = this.state.review;
@@ -91,12 +106,20 @@ export default class ReviewComponent extends Component {
                             </button>
                         </div>
                     </div>
-                    <button onClick={this.handleClick}>Like</button>
+                    <button onClick={this.handleLike}>Like</button>
                     {username === review.authorName && (
-                        <Link
-                        to={`/review/edit/${this.props.match.params.id}`}>
-                            Изменить
-                        </Link>
+                        <div>
+                            <Link
+                            to={`/review/edit/${this.props.match.params.id}`}>
+                                Изменить
+                            </Link>
+                            <button
+                                className="btn btn-danger btn-block"
+                                onClick={this.handleDelete}
+                            >
+                                <span>Delete review</span>
+                            </button>
+                        </div>
                     )}
                 </div>
             )}
