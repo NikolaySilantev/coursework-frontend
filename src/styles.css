@@ -161,3 +161,8 @@
     background: #b7cfe0;
     cursor: pointer;
 }
+
+/* Styles for tag cloud */
+.simple-cloud .tag-cloud-tag {
+    cursor: pointer;
+}

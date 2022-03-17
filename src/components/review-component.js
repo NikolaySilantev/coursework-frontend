@@ -15,11 +15,15 @@ export default class ReviewComponent extends Component {
         this.state = {
             id: this.props.match.params.id,
             review: null,
-            message: ""
+            message: "",
+            // isAdmin: false
         };
     }
 
     componentDidMount() {
+        // this.setState({
+        //     isAdmin: AuthService.getCurrentUser().roles.includes("ROLE_ADMIN"),
+        // });
         ReviewService.getReview(this.state.id).then(
             response => {
                 this.setState({
@@ -107,7 +111,7 @@ export default class ReviewComponent extends Component {
                         </div>
                     </div>
                     <button onClick={this.handleLike}>Like</button>
-                    {username === review.authorName && (
+                    {(username === review.authorName || this.props.isAdmin) && (
                         <div>
                             <Link
                             to={`/review/edit/${this.props.match.params.id}`}>

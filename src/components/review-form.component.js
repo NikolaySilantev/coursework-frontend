@@ -117,7 +117,7 @@ export default class ReviewFormComponent extends Component {
         if (this.props.match.params.id)
             return reviewService.editReview(this.state.title, this.state.subject, this.state.full_text, this.state.imageUrls, this.state.tags, this.props.match.params.id);
         else
-            return reviewService.addReview(this.state.title, this.state.subject, this.state.full_text, this.state.imageUrls, this.state.tags);
+            return reviewService.addReview(this.props.match.params.author, this.state.title, this.state.subject, this.state.full_text, this.state.imageUrls, this.state.tags);
     }
 
     handlePostReview(e) {

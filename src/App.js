@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { Switch, Route, Link } from "react-router-dom";
-import Input from "react-validation/build/input";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min"
 import "./App.css";
@@ -91,7 +90,7 @@ class App extends Component {
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/add-review"} className="nav-link">
+                    <Link to={`/add-review/${currentUser.username}`} className="nav-link">
                       Add some review
                     </Link>
                   </li>
@@ -133,15 +132,11 @@ class App extends Component {
               <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
               <Route path="/admin" component={BoardAdmin} />
-              <Route path={"/add-review"} component={ReviewFormComponent}/>
+              <Route path={"/add-review/:author"} render={props => <ReviewFormComponent key={props.location.key} {...props}/>}/>
               <Route path={"/review/edit/:id"} render={props => <ReviewFormComponent key={props.location.key} {...props}/>}/>
-              {/*<Route path="/add-review" component={(props) => <ReviewFormComponent {...props} mode={"create"}/>} />*/}
-              {/*<Route path="/review/edit/:id" component={(props) => <ReviewFormComponent {...props} mode={"edit"} key={window.location.pathname}/>} />*/}
-              <Route path="/review/details/:id" component={ReviewComponent} />
-              <Route path="/profile/:name" render={props => <Profile key={props.location.key} {...props}/>}/>
-              {/*Putting current location as key on component Re-render same component on url change in react*/}
+              <Route path="/review/details/:id" render={props => <ReviewComponent key={props.location.key} isAdmin={this.state.showAdminBoard} {...props}/>}/>
+              <Route path="/profile/:name" render={props => <Profile key={props.location.key} isAdmin={this.state.showAdminBoard} {...props}/>}/>
               <Route path="/review/tag/:tag" render={props => <ReviewsByTagComponent key={props.location.key} {...props}/>}/>
-              {/*<Route path="/review/tag/:tag" component={(props) => <ReviewsByTagComponent {...props} key={window.location.pathname}/>} />*/}
               <Route path="/review/search/:text" render={props => <SearchComponent key={props.location.key} {...props}/>}/>
             </Switch>
           </div>

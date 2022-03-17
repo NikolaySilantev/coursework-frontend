@@ -4,11 +4,11 @@ import {API_BASE_URL} from "../constants";
 
 const API_URL = API_BASE_URL + "review/";
 class ReviewService {
-    addReview(title, subject, full_text, imageUrls, tags) {
-        tags=tags.map((tag)=>{
+    addReview(author, title, subject, full_text, imageUrls, tags) {
+        tags=tags.map((tag) => {
             return tag.text;
         })
-        return axios.post(API_URL + "add", {
+        return axios.post(API_URL + "add/" + author, {
             title,
             subject,
             full_text,
