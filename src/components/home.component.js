@@ -43,7 +43,6 @@ export default class Home extends Component {
     render() {
         const data = this.state.topTags;
         return (
-
             <div className="container">
                 <header className="jumbotron">
                     <h3>{this.state.content}</h3>

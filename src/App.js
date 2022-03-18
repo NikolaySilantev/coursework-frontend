@@ -131,7 +131,8 @@ class App extends Component {
               <Route exact path="/register" component={Register} />
               <Route path="/user" component={BoardUser} />
               <Route path="/mod" component={BoardModerator} />
-              <Route path="/admin" component={BoardAdmin} />
+              {/*<Route path="/admin" component={BoardAdmin} />*/}
+              <Route path="/admin" render={props => <BoardAdmin key={props.location.key} {...props}/>} />
               <Route path={"/add-review/:author"} render={props => <ReviewFormComponent key={props.location.key} {...props}/>}/>
               <Route path={"/review/edit/:id"} render={props => <ReviewFormComponent key={props.location.key} {...props}/>}/>
               <Route path="/review/details/:id" render={props => <ReviewComponent key={props.location.key} isAdmin={this.state.showAdminBoard} {...props}/>}/>
