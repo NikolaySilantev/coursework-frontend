@@ -6,24 +6,38 @@ import AuthService from "../services/auth.service";
 import authService from "../services/auth.service";
 import {Link} from "react-router-dom";
 import redirect from "react-router-dom/es/Redirect";
+import {Rating} from "react-simple-star-rating";
+import ratingService from "../services/rating.service";
 
 export default class ReviewComponent extends Component {
     constructor(props) {
         super(props);
         this.handleLike = this.handleLike.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleRating = this.handleRating.bind(this);
+
         this.state = {
             id: this.props.match.params.id,
             review: null,
             message: "",
-            // isAdmin: false
+            avgRating: 0,
+            rating: 0
         };
     }
 
     componentDidMount() {
-        // this.setState({
-        //     isAdmin: AuthService.getCurrentUser().roles.includes("ROLE_ADMIN"),
-        // });
+        RatingService.getAvgRating(this.state.id).then(
+            response => {
+            this.setState({
+                avgRating: response.data/20
+            });
+        })
+        RatingService.getUserRating(AuthService.getCurrentUser().id, this.state.id).then(
+            response => {
+                this.setState({
+                    rating: response.data
+                });
+            })
         ReviewService.getReview(this.state.id).then(
             response => {
                 this.setState({
@@ -42,6 +56,13 @@ export default class ReviewComponent extends Component {
                 });
             }
         );
+    }
+
+    handleRating(rate) {
+        this.setState({
+            rating: rate
+        });
+        ratingService.rateReviewSubject(AuthService.getCurrentUser().id, this.state.id, rate)
     }
 
     handleLike() {
@@ -110,6 +131,9 @@ export default class ReviewComponent extends Component {
                             </button>
                         </div>
                     </div>
+                    <p>User scores:</p>
+                    <p>{this.state.avgRating}</p>
+                    <Rating onClick={this.handleRating} ratingValue={this.state.rating} /* Available Props */ />
                     <button onClick={this.handleLike}>Like</button>
                     {(username === review.authorName || this.props.isAdmin) && (
                         <div>

@@ -4,27 +4,29 @@ import {API_BASE_URL} from "../constants";
 
 const API_URL = API_BASE_URL + "review/";
 class ReviewService {
-    addReview(author, title, subject, full_text, imageUrls, tags) {
+    addReview(author, title, category, full_text, authorScore, imageUrls, tags) {
         tags=tags.map((tag) => {
             return tag.text;
         })
         return axios.post(API_URL + "add/" + author, {
             title,
-            subject,
+            category,
             full_text,
+            authorScore,
             imageUrls,
             tags
         }, { headers: authHeader() })
     }
 
-    editReview(title, subject, full_text, imageUrls, tags, id) {
+    editReview(title, category, full_text, authorScore, imageUrls, tags, id) {
         tags=tags.map((tag)=>{
             return tag.text;
         })
         return axios.post(API_URL + "edit", {
             title,
-            subject,
+            category,
             full_text,
+            authorScore,
             imageUrls,
             tags,
             id

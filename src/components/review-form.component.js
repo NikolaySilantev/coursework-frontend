@@ -9,6 +9,8 @@ import Dropzone from "react-dropzone-uploader";
 import imageService from "../services/image.service";
 import {WithContext as ReactTags} from 'react-tag-input';
 import tagService from "../services/tag,service";
+import { Rating } from 'react-simple-star-rating'
+import categoryService from "../services/category.service";
 
 const required = value => {
     if (!value) {
@@ -24,8 +26,9 @@ export default class ReviewFormComponent extends Component {
     constructor(props) {
         super(props);
         this.onChangeTitle = this.onChangeTitle.bind(this);
-        this.onChangeSubject = this.onChangeSubject.bind(this);
+        this.onChangeCategory = this.onChangeCategory.bind(this);
         this.onChangeFull_text = this.onChangeFull_text.bind(this);
+        this.handleRating = this.handleRating.bind(this);
         this.handlePostReview = this.handlePostReview.bind(this);
         this.handleDeleteTag = this.handleDeleteTag.bind(this);
         this.handleAddTag = this.handleAddTag.bind(this);
@@ -33,7 +36,7 @@ export default class ReviewFormComponent extends Component {
         this.handleClickTag = this.handleClickTag.bind(this);
         this.state = {
             title: "",
-            subject: "",
+            category: "",
             full_text: "",
             loading: false,
             message: "",
@@ -43,11 +46,19 @@ export default class ReviewFormComponent extends Component {
             imageUrls: [],
             tags: [],
             isLoaded: false,
-            suggestions: []
+            categories: [],
+            suggestions: [],
+            rating: 0
         };
     }
 
     componentDidMount() {
+        categoryService.getAllCategories().then(r => {
+            this.setState({
+                categories : r.data,
+                category: r.data[0].name
+            })
+        });
         tagService.getAllTags().then(r => {
             this.setState({
                 suggestions : r.data.map((tag) => {
@@ -60,7 +71,7 @@ export default class ReviewFormComponent extends Component {
                 let review = response.data;
                 this.setState({
                     title: review.title,
-                    subject: review.subject,
+                    category: review.category,
                     full_text: review.full_text,
                     imageUrls: review.imageUrls,
                     tags: review.tags.map((tag) => {
@@ -101,9 +112,9 @@ export default class ReviewFormComponent extends Component {
         });
     }
 
-    onChangeSubject(e) {
+    onChangeCategory(e) {
         this.setState({
-            subject: e.target.value
+            category: e.target.value
         });
     }
 
@@ -113,11 +124,17 @@ export default class ReviewFormComponent extends Component {
         });
     }
 
+    handleRating(rate) {
+        this.setState({
+            rating: rate
+        });
+    }
+
     postReview() {
         if (this.props.match.params.id)
-            return reviewService.editReview(this.state.title, this.state.subject, this.state.full_text, this.state.imageUrls, this.state.tags, this.props.match.params.id);
+            return reviewService.editReview(this.state.title, this.state.category, this.state.full_text, this.state.rating, this.state.imageUrls, this.state.tags, this.props.match.params.id);
         else
-            return reviewService.addReview(this.props.match.params.author, this.state.title, this.state.subject, this.state.full_text, this.state.imageUrls, this.state.tags);
+            return reviewService.addReview(this.props.match.params.author, this.state.title, this.state.category, this.state.full_text, this.state.rating, this.state.imageUrls, this.state.tags);
     }
 
     handlePostReview(e) {
@@ -247,16 +264,17 @@ export default class ReviewFormComponent extends Component {
                             validations={[required]}
                         />
                     </div>
+                    <Rating onClick={this.handleRating} ratingValue={this.state.rating} /* Available Props */ />
                     <div className="form-group">
-                        <label htmlFor="subject">Subject</label>
-                        <Input
-                            type="text"
-                            className="form-control"
-                            name="subject"
-                            value={this.state.subject}
-                            onChange={this.onChangeSubject}
-                            validations={[required]}
-                        />
+                        <label htmlFor="category">Category</label>
+                        <select
+                            className="form-select"
+                            value={this.state.category}
+                            onChange={this.onChangeCategory}>
+                            {this.state.categories.map((category, key) => {
+                                return <option key = {key} value={category.name}>{category.name}</option>
+                            })}
+                        </select>
                     </div>
                     <div className="form-group">
                         <label htmlFor="full_text">Full text</label>
@@ -289,6 +307,7 @@ export default class ReviewFormComponent extends Component {
                             </div>
                         </div>
                     </div>
+
                     <div className="form-group">
                         {isLoaded ? (
                             <React.Fragment>
