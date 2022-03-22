@@ -8,6 +8,7 @@ import {Link} from "react-router-dom";
 import redirect from "react-router-dom/es/Redirect";
 import {Rating} from "react-simple-star-rating";
 import ratingService from "../services/rating.service";
+import Moment from 'moment';
 
 export default class ReviewComponent extends Component {
     constructor(props) {
@@ -20,18 +21,11 @@ export default class ReviewComponent extends Component {
             id: this.props.match.params.id,
             review: null,
             message: "",
-            avgRating: 0,
             rating: 0
         };
     }
 
     componentDidMount() {
-        RatingService.getAvgRating(this.state.id).then(
-            response => {
-            this.setState({
-                avgRating: response.data/20
-            });
-        })
         RatingService.getUserRating(AuthService.getCurrentUser().id, this.state.id).then(
             response => {
                 this.setState({
@@ -94,6 +88,7 @@ export default class ReviewComponent extends Component {
                 <div className="container">
                     <h3>{review.authorName}</h3>
                     <p>{review.title}</p>
+                    {review.releaseDate && (<p>Release date: {Moment(review.releaseDate.toString()).format('MMMM Do YYYY, h:mm:ss a')}</p>)}
                     <MarkdownPreview source={review.full_text} />
                     <div>
                         <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
@@ -132,7 +127,7 @@ export default class ReviewComponent extends Component {
                         </div>
                     </div>
                     <p>User scores:</p>
-                    <p>{this.state.avgRating}</p>
+                    <p>{review.userScore}</p>
                     <Rating onClick={this.handleRating} ratingValue={this.state.rating} /* Available Props */ />
                     <button onClick={this.handleLike}>Like</button>
                     {(username === review.authorName || this.props.isAdmin) && (

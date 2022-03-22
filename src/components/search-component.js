@@ -36,7 +36,7 @@ export default class SearchComponent extends Component {
                 <header className="jumbotron">
                     <h3>{this.state.content}</h3>
                 </header>
-                <ReviewListComponent reviews={this.state.reviews}/>
+                <ReviewListComponent reviews={this.state.reviews} key={this.state.reviews.length}/>
             </div>
         );
     }

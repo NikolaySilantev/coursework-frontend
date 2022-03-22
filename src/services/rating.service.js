@@ -18,9 +18,6 @@ class RatingService {
         }, { headers: authHeader() })
     }
 
-    getAvgRating(id) {
-        return axios.get(API_URL + id + "/avg")
-    }
     getUserRating(userId, reviewId) {
         return axios.get(API_URL + "user-score", {params: {reviewId: reviewId, userId: userId}})
     }

@@ -54,7 +54,7 @@ export default class Home extends Component {
                     className="simple-cloud"
                     onClick={tag => this.props.history.push(`/review/tag/${tag.value}`)}
                 />
-                <ReviewListComponent reviews={this.state.reviews}/>
+                <ReviewListComponent reviews={this.state.reviews} key={this.state.reviews.length}/>
             </div>
         );
     }
