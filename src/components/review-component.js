@@ -19,6 +19,7 @@ export default class ReviewComponent extends Component {
 
         this.state = {
             id: this.props.match.params.id,
+            currentUser: AuthService.getCurrentUser(),
             review: null,
             message: "",
             rating: 0,
@@ -28,19 +29,20 @@ export default class ReviewComponent extends Component {
     }
 
     componentDidMount() {
-        RatingService.getUserRating(AuthService.getCurrentUser().id, this.state.id).then(
-            response => {
-                this.setState({
-                    rating: response.data
-                });
-            })
-        RatingService.getUserLike(AuthService.getCurrentUser().id, this.state.id).then(
-            response => {
-                this.setState({
-                    like: response.data
-                });
-                console.log(response.data)
-            })
+        if (AuthService.getCurrentUser()) {
+            RatingService.getUserRating(AuthService.getCurrentUser().id, this.state.id).then(
+                response => {
+                    this.setState({
+                        rating: response.data
+                    });
+                })
+            RatingService.getUserLike(AuthService.getCurrentUser().id, this.state.id).then(
+                response => {
+                    this.setState({
+                        like: response.data
+                    });
+                })
+        }
         ReviewService.getReview(this.state.id).then(
             response => {
                 this.setState({
@@ -93,7 +95,8 @@ export default class ReviewComponent extends Component {
 
     render() {
         const review = this.state.review;
-        const username = authService.getCurrentUser().username;
+        const currentUser = this.state.currentUser;
+        const username = currentUser ? currentUser.username : null;
         return (
             <div>
                 {review && (

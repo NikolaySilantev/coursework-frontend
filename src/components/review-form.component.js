@@ -153,7 +153,8 @@ export default class ReviewFormComponent extends Component {
             this.state.images.forEach(img => {
                 promises.push(
                     imageService.upload(img).then(response => {
-                        this.state.imageUrls.push(response.data.url)
+                        console.log(response.data)
+                        this.state.imageUrls.push(response.data.secure_url)
                     })
                 )
             })
@@ -264,6 +265,7 @@ export default class ReviewFormComponent extends Component {
                             validations={[required]}
                         />
                     </div>
+                    <label htmlFor="rating">Your rating</label>
                     <Rating onClick={this.handleRating} ratingValue={this.state.rating} /* Available Props */ />
                     <div className="form-group">
                         <label htmlFor="category">Category</label>
