@@ -8,7 +8,7 @@ import '../styles.css'
 import Dropzone from "react-dropzone-uploader";
 import imageService from "../services/image.service";
 import {WithContext as ReactTags} from 'react-tag-input';
-import tagService from "../services/tag,service";
+import tagService from "../services/tag.service";
 import { Rating } from 'react-simple-star-rating'
 import categoryService from "../services/category.service";
 

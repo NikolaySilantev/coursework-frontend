@@ -2,8 +2,7 @@ import React, { Component } from "react";
 import ReviewListComponent from "./review-list-component";
 import ReviewService from "../services/review.service";
 import { TagCloud } from 'react-tagcloud'
-import TagService from "../services/tag,service";
-import redirect from "react-router-dom/es/Redirect";
+import TagService from "../services/tag.service";
 export default class Home extends Component {
     constructor(props) {
         super(props);

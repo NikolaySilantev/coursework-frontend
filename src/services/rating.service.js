@@ -21,5 +21,9 @@ class RatingService {
     getUserRating(userId, reviewId) {
         return axios.get(API_URL + "user-score", {params: {reviewId: reviewId, userId: userId}})
     }
+
+    getUserLike(userId, reviewId) {
+        return axios.get(API_URL + "user-like", {params: {reviewId: reviewId, userId: userId}})
+    }
 }
 export default new RatingService();

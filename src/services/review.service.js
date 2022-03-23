@@ -42,6 +42,10 @@ class ReviewService {
         return axios.get(API_URL + "tag/" + tag)
     }
 
+    getReviewsByUser(username) {
+        return axios.get(API_URL + "user/" + username)
+    }
+
     searchReview(text) {
         return axios.get(API_URL + "search/" + text)
     }
