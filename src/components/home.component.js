@@ -46,13 +46,15 @@ export default class Home extends Component {
                 <header className="jumbotron">
                     <h3>{this.state.content}</h3>
                 </header>
-                <TagCloud
-                    minSize={12}
-                    maxSize={35}
-                    tags={data}
-                    className="simple-cloud"
-                    onClick={tag => this.props.history.push(`/review/tag/${tag.value}`)}
-                />
+                <div className="d-flex justify-content-center">
+                    <TagCloud
+                        minSize={12}
+                        maxSize={35}
+                        tags={data}
+                        className="simple-cloud"
+                        onClick={tag => this.props.history.push(`/review/tag/${tag.value}`)}
+                    />
+                </div>
                 <ReviewListComponent reviews={this.state.reviews} key={this.state.reviews.length}/>
             </div>
         );

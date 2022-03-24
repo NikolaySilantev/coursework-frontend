@@ -74,6 +74,7 @@ export default class ReviewFormComponent extends Component {
                     category: review.category,
                     full_text: review.full_text,
                     imageUrls: review.imageUrls,
+                    rating: review.authorScore,
                     tags: review.tags.map((tag) => {
                         return {"id": tag, "text": tag}
                     })

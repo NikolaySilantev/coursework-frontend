@@ -166,3 +166,25 @@
 .simple-cloud .tag-cloud-tag {
     cursor: pointer;
 }
+
+/* styles for sort icon */
+.sort-reflect {
+    transform: scaleY(-1)
+}
+
+/* styles for review images */
+.review-image {
+
+}
+.carousel-item{
+    overflow: hidden;
+}
+
+.carousel-item img{
+    height: 70vh;
+    max-width: none;
+    left: 50%;
+    position: relative;
+    transform: translateX(-50%);
+    -webkit-transform: translateX(-50%);
+}

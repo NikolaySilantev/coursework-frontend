@@ -91,7 +91,7 @@ class App extends Component {
                   </li>
                   <li className="nav-item">
                     <Link to={`/add-review/${currentUser.username}`} className="nav-link">
-                      Add some review
+                      Add review
                     </Link>
                   </li>
                   <li className="nav-item">

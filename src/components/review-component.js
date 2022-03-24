@@ -3,12 +3,11 @@ import ReviewService from "../services/review.service";
 import MarkdownPreview from '@uiw/react-markdown-preview';
 import RatingService from "../services/rating.service";
 import AuthService from "../services/auth.service";
-import authService from "../services/auth.service";
 import {Link} from "react-router-dom";
-import redirect from "react-router-dom/es/Redirect";
 import {Rating} from "react-simple-star-rating";
 import ratingService from "../services/rating.service";
 import Moment from 'moment';
+import ImageCarouselComponent from "./image-carousel-component";
 
 export default class ReviewComponent extends Component {
     constructor(props) {
@@ -101,84 +100,130 @@ export default class ReviewComponent extends Component {
             <div>
                 {review && (
                     <div className="container">
-                        <h3>{review.authorName}</h3>
-                        <p>{review.title}</p>
-                        {review.releaseDate && (<p>Release
+                        <h3>
+                            <Link
+                                to={`/profile/${review.authorName}`}
+                                style={{textDecoration: 'none'}}
+                                className="link-dark"
+                            >
+                                {review.authorName}
+                                {review.authorImgUrl ?
+                                    (<img className="" src="{review.authorImgUrl}" alt="..."/>)
+                                    :
+                                    (<i className="material-icons align-middle h1">face</i>)
+                                }
+                            </Link>
+                        </h3>
+                        <p className="fw-bold">{review.category}</p>
+                        <h1>{review.title}</h1>
+                        {review.releaseDate && (<p className="text-muted">Release
                             date: {Moment(review.releaseDate.toString()).format('MMMM Do YYYY, h:mm:ss a')}</p>)}
-                        <MarkdownPreview source={review.full_text}/>
                         <div>
-                            <div id="carouselExampleIndicators" className="carousel slide" data-bs-ride="carousel">
+                            <p>
+                                Author score: {review.authorScore/20}
+                                <i className="material-icons align-middle h2 text-warning">
+                                    star_rate
+                                </i>
+                            </p>
+                        </div>
+                        <MarkdownPreview source={review.full_text}/>
+                        <div className="mt-2">
+                            <ImageCarouselComponent images={review.imageUrls} key={review.imageUrls.length}/>
+                        </div>
+                        <div className="mt-2">
+                            Tags:
+                            {
+                                review.tags.map((tag, tag_index) =>
+                                    <span className="badge bg-secondary m-lg-1">
+                                        <Link
+                                            className="link-light"
+                                            style={{textDecoration: 'none'}}
+                                            key={tag_index}
+                                            to={`/review/tag/${tag}`}
+                                        >
+                                            {tag}
+                                        </Link>
+                                    </span>
+                                )
+                            }
+                        </div>
+                        <div className="d-flex justify-content-between">
+                            <div>
+                                <p>
+                                    User scores: {review.userScore/20}
+                                    <i className="material-icons align-middle h2 text-warning">
+                                        star_rate
+                                    </i>
+                                </p>
+                            </div>
+                            <div>
+                                <div className="d-flex justify-content-end">
+                                    <i className="align-middle">
+                                        Hit your own rating!
+                                        <Rating onClick={this.handleRating}
+                                                ratingValue={this.state.rating}
+                                        />
+                                    </i>
 
-                                <div className="carousel-indicators">
-                                    {review.imageUrls.map((image, index) =>
-                                        (index === 0 && <button key={index} type="button"
-                                                                data-bs-target="#carouselExampleIndicators"
-                                                                data-bs-slide-to={index}
-                                                                className="active" aria-current="true"
-                                                                aria-label={"Slide " + index + 1}/>)
-                                        ||
-                                        (<button key={index} type="button" data-bs-target="#carouselExampleIndicators"
-                                                 data-bs-slide-to={index}
-                                                 aria-label={"Slide " + index + 1}/>)
-                                    )}
                                 </div>
-
-                                <div className="carousel-inner">
-                                    {review.imageUrls.map((image, index) =>
-                                        (index === 0 && <div key={index} className="carousel-item active">
-                                            <img src={image} className="d-block w-100" alt="..."/>
-                                        </div>)
-                                        ||
-                                        (<div key={index} className="carousel-item">
-                                            <img src={image} className="d-block w-100" alt="..."/>
-                                        </div>)
-                                    )}
+                                <div className="d-flex justify-content-end">
+                                    {
+                                        this.state.like ?
+                                            (
+                                                <div>
+                                                    <i>Keep it up!</i>
+                                                    <button className="btn btn-outline shadow-none" name="block" data-bs-toggle="tooltip" title="Dislike"
+                                                            onClick={this.handleLike}>
+                                                        <i className="material-icons text-primary h2 align-middle">favorite</i>
+                                                        {this.state.likeCount}
+                                                    </button>
+                                                </div>
+                                            )
+                                            :
+                                            (
+                                                <div>
+                                                    <i>Did you enjoy this review?</i>
+                                                    <button className="btn btn-outline shadow-none" name="block" data-bs-toggle="tooltip" title="Dislike"
+                                                            onClick={this.handleLike}>
+                                                        <i className="material-icons text-primary h2 align-middle">favorite_border</i>
+                                                        {this.state.likeCount}
+                                                    </button>
+                                                </div>
+                                            )
+                                    }
                                 </div>
-                                <button className="carousel-control-prev" type="button"
-                                        data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                                    <span className="carousel-control-prev-icon" aria-hidden="true"/>
-                                    <span className="visually-hidden">Previous</span>
-                                </button>
-                                <button className="carousel-control-next" type="button"
-                                        data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                                    <span className="carousel-control-next-icon" aria-hidden="true"/>
-                                    <span className="visually-hidden">Next</span>
-                                </button>
                             </div>
                         </div>
-                        <p>User scores: {review.userScore}</p>
-                        <p>Like count: {this.state.likeCount}</p>
-                        <p></p>
-                        <Rating onClick={this.handleRating} ratingValue={this.state.rating} /* Available Props */ />
-                        {
-                            this.state.like ? (
-                                    <button className="btn btn-outline" name="block" data-bs-toggle="tooltip" title="Dislike"
-                                            onClick={this.handleLike}>
-                                        <i className="material-icons text-primary">favorite</i>
-                                    </button>
-                                )
-                                :
-                                (
-                                    <button className="btn btn-outline" name="block" data-bs-toggle="tooltip" title="Dislike"
-                                            onClick={this.handleLike}>
-                                        <i className="material-icons text-primary">favorite_border</i>
-                                    </button>
-                                )
-                        }
                         {(username === review.authorName || this.props.isAdmin) && (
-                            <div>
+                            <div className="d-flex justify-content-end">
+                                <i className="m-2">It looks like you are the author. You can:</i>
                                 <Link
+                                    className="btn btn-primary"
                                     to={`/review/edit/${this.props.match.params.id}`}>
-                                    Изменить
+
+                                    <div className="d-flex justify-content-between">
+                                        <i className="material-icons align-middle">
+                                            edit
+                                        </i>
+                                        <span>
+                                            Edit review
+                                        </span>
+                                    </div>
                                 </Link>
                                 <button
                                     className="btn btn-danger btn-block"
                                     onClick={this.handleDelete}
                                 >
-                                    <span>Delete review</span>
+                                    <i className="material-icons align-middle">
+                                        delete
+                                    </i>
+                                    <span>
+                                        Delete review
+                                    </span>
                                 </button>
                             </div>
                         )}
+                        <h1>Comments: </h1>
                     </div>
                 )}
             </div>
