@@ -153,7 +153,7 @@ export default class ReviewListComponent extends Component {
                                                 }
                                             </div>
                                         </div>
-                                    <ImageCarouselComponent images={review.imageUrls} carouselId={review.id} key={this.state.reviews.length}/>
+                                    <ImageCarouselComponent images={review.imageUrls} carouselId={review.id} key={review.id}/>
                                     <div className="card-text d-flex justify-content-between mt-2">
                                         <i className="material-icons align-bottom">
                                             comment
