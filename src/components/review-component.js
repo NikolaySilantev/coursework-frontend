@@ -8,6 +8,7 @@ import {Rating} from "react-simple-star-rating";
 import ratingService from "../services/rating.service";
 import Moment from 'moment';
 import ImageCarouselComponent from "./image-carousel-component";
+import ReviewCommentsComponent from "./review-comments-component";
 
 export default class ReviewComponent extends Component {
     constructor(props) {
@@ -130,15 +131,14 @@ export default class ReviewComponent extends Component {
                         <div className="mt-2">
                             <ImageCarouselComponent images={review.imageUrls} key={review.imageUrls.length}/>
                         </div>
-                        <div className="mt-2">
+                        {review.tags.length!==0 && (<div className="mt-2">
                             Tags:
                             {
                                 review.tags.map((tag, tag_index) =>
-                                    <span className="badge bg-secondary m-lg-1">
+                                    <span className="badge bg-secondary ms-1" key={tag_index}>
                                         <Link
                                             className="link-light"
                                             style={{textDecoration: 'none'}}
-                                            key={tag_index}
                                             to={`/review/tag/${tag}`}
                                         >
                                             {tag}
@@ -146,7 +146,7 @@ export default class ReviewComponent extends Component {
                                     </span>
                                 )
                             }
-                        </div>
+                        </div>)}
                         <div className="d-flex justify-content-between">
                             <div>
                                 <p>
@@ -224,6 +224,7 @@ export default class ReviewComponent extends Component {
                             </div>
                         )}
                         <h1>Comments: </h1>
+                        <ReviewCommentsComponent reviewId={this.props.match.params.id}/>
                     </div>
                 )}
             </div>

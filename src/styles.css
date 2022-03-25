@@ -162,6 +162,15 @@
     cursor: pointer;
 }
 
+/* Styles for tags */
+.ReactTags__remove {
+    margin-left: .25rem;
+    border: none;
+    cursor: pointer;
+    background: none;
+    color: white;
+}
+
 /* Styles for tag cloud */
 .simple-cloud .tag-cloud-tag {
     cursor: pointer;

@@ -51,7 +51,7 @@ class App extends Component {
     return (
         <div>
           <nav className="navbar navbar-expand navbar-dark bg-dark">
-            <Link to={"/"} className="navbar-brand">
+            <Link to={"/"} className="navbar-brand ms-2">
               Silantev
             </Link>
             <div className="navbar-nav mr-auto">
@@ -114,7 +114,7 @@ class App extends Component {
                   </li>
                 </div>
             )}
-            <div className="d-flex ms-auto">
+            <div className="d-flex ms-auto me-2">
               <input
                   className="form-control me-2" type="search" placeholder="Search" aria-label="Search"
                   value={this.state.searchText}

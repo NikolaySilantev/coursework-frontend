@@ -293,7 +293,8 @@ export default class ReviewFormComponent extends Component {
                             <div>
                                 <ReactTags
                                     classNames={{
-                                        tagInputField: 'form-control'
+                                        tagInputField: 'form-control',
+                                        tag: 'badge bg-secondary me-1 mb-2',
                                     }}
                                     tags={this.state.tags}
                                     suggestions={this.state.suggestions}

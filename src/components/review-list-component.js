@@ -110,7 +110,7 @@ export default class ReviewListComponent extends Component {
                                             <Link
                                                 to={`/profile/${review.authorName}`}
                                                 style={{textDecoration: 'none'}}
-                                                className="link-dark card-title m-lg-3"
+                                                className="link-dark card-title ms-3"
                                             >
                                                 {review.authorName}
                                                 {review.authorImgUrl ?
@@ -120,7 +120,7 @@ export default class ReviewListComponent extends Component {
                                                 }
                                             </Link>
                                             {review.releaseDate && (
-                                                <small className="text-muted">
+                                                <small className="text-muted ms-3">
                                                     Release
                                                     date: {Moment(review.releaseDate.toString()).format('MMMM Do YYYY, h:mm:ss a')}
                                                 </small>
@@ -137,22 +137,24 @@ export default class ReviewListComponent extends Component {
                                                 source={review.full_text.split('\n')[0] + '<br /><br />' +"***Hit me to see more...***"}
                                             />
                                         </Link>
-                                        <div className="card-body">
-                                            <div className="card-text">
+                                    {review.tags.length!==0 && (<div className="card-body">
+                                        <div className="card-text">
                                             Tags:
-                                                {
-                                                    review.tags.map((tag, tag_index) =>
-                                                        <Link
-                                                            className="m-lg-1"
-                                                            key={tag_index}
-                                                            to={`/review/tag/${tag}`}
-                                                        >
-                                                            {tag}
-                                                        </Link>
-                                                    )
-                                                }
-                                            </div>
+                                            {
+                                                review.tags.map((tag, tag_index) =>
+                                                    <span className="badge bg-secondary ms-1" key={tag_index}>
+                                                            <Link
+                                                                className="link-light"
+                                                                style={{textDecoration: 'none'}}
+                                                                to={`/review/tag/${tag}`}
+                                                            >
+                                                                {tag}
+                                                            </Link>
+                                                        </span>
+                                                )
+                                            }
                                         </div>
+                                    </div>)}
                                     <ImageCarouselComponent images={review.imageUrls} carouselId={review.id} key={review.id}/>
                                     <div className="card-text d-flex justify-content-between mt-2">
                                         <i className="material-icons align-bottom">
