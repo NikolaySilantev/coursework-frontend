@@ -19,12 +19,6 @@ class UserService {
     makeAdminUsers(ids) {
         return axios.post(API_URL_USER + 'admin', ids, { headers: authHeader() });
     }
-    getUserBoard() {
-        return axios.get(API_URL + 'user', { headers: authHeader() });
-    }
-    getModeratorBoard() {
-        return axios.get(API_URL + 'mod', { headers: authHeader() });
-    }
     getAdminBoard() {
         return axios.get(API_URL + 'admin', { headers: authHeader() });
     }

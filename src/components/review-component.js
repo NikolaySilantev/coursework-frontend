@@ -120,7 +120,7 @@ export default class ReviewComponent extends Component {
                         {review.releaseDate && (<p className="text-muted">Release
                             date: {Moment(review.releaseDate.toString()).format('MMMM Do YYYY, h:mm:ss a')}</p>)}
                         <div>
-                            <p>
+                            <p className="h5">
                                 Author score: {review.authorScore/20}
                                 <i className="material-icons align-middle h2 text-warning">
                                     star_rate
@@ -147,10 +147,10 @@ export default class ReviewComponent extends Component {
                                 )
                             }
                         </div>)}
-                        <div className="d-flex justify-content-between">
+                        <div className="d-flex justify-content-between mt-4">
                             <div>
-                                <p>
-                                    User scores: {review.userScore/20}
+                                <p className="h5">
+                                    User scores: {(review.userScore/20).toFixed(2)}
                                     <i className="material-icons align-middle h2 text-warning">
                                         star_rate
                                     </i>
@@ -158,15 +158,14 @@ export default class ReviewComponent extends Component {
                             </div>
                             <div>
                                 <div className="d-flex justify-content-end">
-                                    <i className="align-middle">
+                                    {this.state.currentUser? (<i className="align-top">
                                         Hit your own rating!
                                         <Rating onClick={this.handleRating}
                                                 ratingValue={this.state.rating}
                                         />
-                                    </i>
-
+                                    </i>): (<div><Link to={"/login"}>Login</Link> to rate this</div>)}
                                 </div>
-                                <div className="d-flex justify-content-end">
+                                {this.state.currentUser ? (<div className="d-flex justify-content-end">
                                     {
                                         this.state.like ?
                                             (
@@ -175,7 +174,7 @@ export default class ReviewComponent extends Component {
                                                     <button className="btn btn-outline shadow-none" name="block" data-bs-toggle="tooltip" title="Dislike"
                                                             onClick={this.handleLike}>
                                                         <i className="material-icons text-primary h2 align-middle">favorite</i>
-                                                        {this.state.likeCount}
+                                                        <span className="h2 align-top">{this.state.likeCount}</span>
                                                     </button>
                                                 </div>
                                             )
@@ -186,12 +185,17 @@ export default class ReviewComponent extends Component {
                                                     <button className="btn btn-outline shadow-none" name="block" data-bs-toggle="tooltip" title="Dislike"
                                                             onClick={this.handleLike}>
                                                         <i className="material-icons text-primary h2 align-middle">favorite_border</i>
-                                                        {this.state.likeCount}
+                                                        <span className="h2 align-top">{this.state.likeCount}</span>
                                                     </button>
                                                 </div>
                                             )
                                     }
-                                </div>
+                                </div>):(
+                                    <div className="btn btn-outline shadow-none d-flex justify-content-end">
+                                        <i className="material-icons text-primary h2 align-middle">favorite</i>
+                                        <span className="h2">{this.state.likeCount}</span>
+                                    </div>
+                                )}
                             </div>
                         </div>
                         {(username === review.authorName || this.props.isAdmin) && (
@@ -223,7 +227,6 @@ export default class ReviewComponent extends Component {
                                 </button>
                             </div>
                         )}
-                        <h1>Comments: </h1>
                         <ReviewCommentsComponent reviewId={this.props.match.params.id}/>
                     </div>
                 )}

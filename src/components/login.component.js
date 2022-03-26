@@ -104,9 +104,9 @@ export default class Login extends Component {
                                 validations={[required]}
                             />
                         </div>
-                        <div className="form-group">
+                        <div className="form-group d-flex justify-content-end">
                             <button
-                                className="btn btn-primary btn-block"
+                                className="btn btn-primary btn-block mt-1"
                                 disabled={this.state.loading}
                             >
                                 {this.state.loading && (

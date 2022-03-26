@@ -34,6 +34,7 @@ export default class ReviewListComponent extends Component {
             sortedByScore: true,
             sortedByDate: false
         })
+        console.log(this.state.reviews)
     }
 
     sortByDate() {
@@ -51,7 +52,7 @@ export default class ReviewListComponent extends Component {
 
     render() {
         return (
-            <div className="container w-75 p-3">
+            <div className="container p-3">
                 {this.state.reviews.length !== 0 && (
                     <div>
                         <div>
@@ -100,31 +101,43 @@ export default class ReviewListComponent extends Component {
 
                             this.state.reviews.map((review, review_index) =>
                                 <div key={review_index} className="card mb-3 bg-white">
-                                        <div className="card-body">
-                                            <a
-                                                style={{textDecoration: 'none'}}
-                                                className="link-dark card-title fw-bold"
-                                            >
-                                                {review.category}
-                                            </a>
-                                            <Link
-                                                to={`/profile/${review.authorName}`}
-                                                style={{textDecoration: 'none'}}
-                                                className="link-dark card-title ms-3"
-                                            >
-                                                {review.authorName}
-                                                {review.authorImgUrl ?
-                                                    (<img className="" src="{review.authorImgUrl}" alt="..."/>)
-                                                    :
-                                                    (<i className="material-icons align-bottom">face</i>)
-                                                }
-                                            </Link>
-                                            {review.releaseDate && (
-                                                <small className="text-muted ms-3">
-                                                    Release
-                                                    date: {Moment(review.releaseDate.toString()).format('MMMM Do YYYY, h:mm:ss a')}
-                                                </small>
-                                            )}
+                                        <div className="card-body d-flex justify-content-between">
+                                            <div>
+                                                <a
+                                                    style={{textDecoration: 'none'}}
+                                                    className="link-dark card-title fw-bold"
+                                                >
+                                                    {review.category}
+                                                </a>
+                                                <Link
+                                                    to={`/profile/${review.authorName}`}
+                                                    style={{textDecoration: 'none'}}
+                                                    className="link-dark card-title ms-3"
+                                                >
+                                                    {review.authorName}
+                                                    {review.authorImgUrl ?
+                                                        (<img className="" src="{review.authorImgUrl}" alt="..."/>)
+                                                        :
+                                                        (<i className="material-icons align-bottom">face</i>)
+                                                    }
+                                                </Link>
+                                                {review.releaseDate && (
+                                                    <small className="text-muted ms-3">
+                                                        Release
+                                                        date: {Moment(review.releaseDate.toString()).format('MMMM Do YYYY, h:mm:ss a')}
+                                                    </small>
+                                                )}
+                                            </div>
+                                            <span className="ms-3">
+                                                Author score: {review.authorScore / 20}
+                                                <i className="material-icons align-bottom text-warning">
+                                                    star_rate
+                                                </i>
+                                                User score: {(review.userScore / 20).toFixed(2)}
+                                                <i className="material-icons align-bottom text-warning">
+                                                    star_rate
+                                                </i>
+                                            </span>
                                         </div>
                                         <Link
                                             to={`/review/details/${review.id}`}
@@ -156,21 +169,6 @@ export default class ReviewListComponent extends Component {
                                         </div>
                                     </div>)}
                                     <ImageCarouselComponent images={review.imageUrls} carouselId={review.id} key={review.id}/>
-                                    <div className="card-text d-flex justify-content-between mt-2">
-                                        <i className="material-icons align-bottom">
-                                            comment
-                                        </i>
-                                        <div>
-                                            Author score: {review.authorScore / 20}
-                                            <i className="material-icons align-bottom text-warning">
-                                                star_rate
-                                            </i>
-                                            User score: {review.userScore / 20}
-                                            <i className="material-icons align-bottom text-warning">
-                                                star_rate
-                                            </i>
-                                        </div>
-                                    </div>
                                 </div>
                             )
                         }
