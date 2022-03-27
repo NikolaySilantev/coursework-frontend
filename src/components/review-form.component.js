@@ -153,7 +153,6 @@ export default class ReviewFormComponent extends Component {
             this.state.images.forEach(img => {
                 promises.push(
                     ImageService.upload(img).then(response => {
-                        console.log(response.data)
                         this.state.imageUrls.push(response.data.secure_url)
                     })
                 )
@@ -176,10 +175,6 @@ export default class ReviewFormComponent extends Component {
                             successful: false,
                             message: resMessage
                         });
-                        console.log(error.response.data)
-                        console.log(error.response)
-                        console.log(error.message)
-                        console.log(error.toString())
                     }
                 );
             });

@@ -34,7 +34,6 @@ export default class ReviewListComponent extends Component {
             sortedByScore: true,
             sortedByDate: false
         })
-        console.log(this.state.reviews)
     }
 
     sortByDate() {

@@ -34,14 +34,12 @@ export default class ReviewComponent extends Component {
                     this.setState({
                         rating: response.data
                     });
-                    console.log(response.data)
                 })
             RatingService.getUserLike(AuthService.getCurrentUser().id, this.state.id).then(
                 response => {
                     this.setState({
                         like: response.data
                     });
-                    console.log(response.data)
                 })
         }
         ReviewService.getReview(this.state.id).then(
