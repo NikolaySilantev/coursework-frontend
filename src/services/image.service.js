@@ -6,10 +6,12 @@ class ImageService {
         const formData = new FormData();
         formData.append("file", file);
         formData.append("upload_preset", "ofzcnspt")
-        return axios.post(CLOUDINARY_URL , formData);
+        return axios.post(CLOUDINARY_URL, formData);
     }
+
     getImage(url) {
         return axios.get(url);
     }
 }
+
 export default new ImageService();

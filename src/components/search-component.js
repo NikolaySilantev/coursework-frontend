@@ -1,6 +1,7 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import ReviewListComponent from "./review-list-component";
 import ReviewService from "../services/review.service";
+
 export default class SearchComponent extends Component {
     constructor(props) {
         super(props);
@@ -9,6 +10,7 @@ export default class SearchComponent extends Component {
             reviews: []
         };
     }
+
     componentDidMount() {
         ReviewService.searchReview(this.state.text).then(
             response => {
@@ -31,11 +33,8 @@ export default class SearchComponent extends Component {
     }
 
     render() {
-            return (
+        return (
             <div className="container">
-                <header className="jumbotron">
-                    <h3>{this.state.content}</h3>
-                </header>
                 <ReviewListComponent reviews={this.state.reviews} key={this.state.reviews.length}/>
             </div>
         );

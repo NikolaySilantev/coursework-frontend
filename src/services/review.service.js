@@ -3,9 +3,10 @@ import authHeader from './auth-header';
 import {API_BASE_URL} from "../constants";
 
 const API_URL = API_BASE_URL + "review/";
+
 class ReviewService {
     addReview(author, title, category, full_text, authorScore, imageUrls, tags) {
-        tags=tags.map((tag) => {
+        tags = tags.map((tag) => {
             return tag.text;
         })
         return axios.post(API_URL + "add/" + author, {
@@ -15,11 +16,11 @@ class ReviewService {
             authorScore,
             imageUrls,
             tags
-        }, { headers: authHeader() })
+        }, {headers: authHeader()})
     }
 
     editReview(title, category, full_text, authorScore, imageUrls, tags, id) {
-        tags=tags.map((tag)=>{
+        tags = tags.map((tag) => {
             return tag.text;
         })
         return axios.post(API_URL + "edit", {
@@ -30,14 +31,17 @@ class ReviewService {
             imageUrls,
             tags,
             id
-        }, { headers: authHeader() })
+        }, {headers: authHeader()})
     }
+
     getAllReviews() {
         return axios.get(API_URL + "all")
     }
+
     getReview(id) {
         return axios.get(API_URL + "details/" + id)
     }
+
     getReviewByTag(tag) {
         return axios.get(API_URL + "tag/" + tag)
     }
@@ -51,7 +55,8 @@ class ReviewService {
     }
 
     deleteReview(id) {
-        return axios.delete(API_URL + "delete/" + id, { headers: authHeader() })
+        return axios.delete(API_URL + "delete/" + id, {headers: authHeader()})
     }
 }
+
 export default new ReviewService();

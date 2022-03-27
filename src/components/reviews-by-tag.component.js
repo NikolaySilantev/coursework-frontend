@@ -6,10 +6,11 @@ export default class ReviewsByTagComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            tag:this.props.match.params.tag,
+            tag: this.props.match.params.tag,
             reviews: []
         };
     }
+
     componentDidMount() {
         ReviewService.getReviewByTag(this.state.tag).then(
             response => {
@@ -32,11 +33,8 @@ export default class ReviewsByTagComponent extends Component {
     }
 
     render() {
-            return (
+        return (
             <div className="container">
-                <header className="jumbotron">
-                    <h3>{this.state.content}</h3>
-                </header>
                 <ReviewListComponent reviews={this.state.reviews} key={this.state.reviews.length}/>
             </div>
         );

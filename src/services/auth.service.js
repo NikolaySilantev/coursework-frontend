@@ -2,6 +2,7 @@ import axios from "axios";
 import {API_BASE_URL} from "../constants";
 
 const API_URL = API_BASE_URL + "auth/";
+
 class AuthService {
     login(username, password) {
         return axios
@@ -16,9 +17,11 @@ class AuthService {
                 return response.data;
             });
     }
+
     logout() {
         localStorage.removeItem("user");
     }
+
     register(username, email, password) {
         return axios.post(API_URL + "signup", {
             username,
@@ -26,8 +29,10 @@ class AuthService {
             password
         });
     }
+
     getCurrentUser() {
         return JSON.parse(localStorage.getItem('user'));
     }
 }
+
 export default new AuthService();

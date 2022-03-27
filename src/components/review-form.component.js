@@ -3,14 +3,14 @@ import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import MDEditor from '@uiw/react-md-editor';
-import reviewService from "../services/review.service";
+import ReviewService from "../services/review.service";
 import '../styles.css'
 import Dropzone from "react-dropzone-uploader";
-import imageService from "../services/image.service";
+import ImageService from "../services/image.service";
 import {WithContext as ReactTags} from 'react-tag-input';
-import tagService from "../services/tag.service";
-import { Rating } from 'react-simple-star-rating'
-import categoryService from "../services/category.service";
+import TagService from "../services/tag.service";
+import {Rating} from 'react-simple-star-rating'
+import CategoryService from "../services/category.service";
 
 const required = value => {
     if (!value) {
@@ -45,7 +45,7 @@ export default class ReviewFormComponent extends Component {
             initialImages: [],
             imageUrls: [],
             tags: [],
-            isLoaded: false,
+            isImagesLoaded: false,
             categories: [],
             suggestions: [],
             rating: 0
@@ -53,21 +53,21 @@ export default class ReviewFormComponent extends Component {
     }
 
     componentDidMount() {
-        categoryService.getAllCategories().then(r => {
+        CategoryService.getAllCategories().then(r => {
             this.setState({
-                categories : r.data,
+                categories: r.data,
                 category: r.data[0].name
             })
         });
-        tagService.getAllTags().then(r => {
+        TagService.getAllTags().then(r => {
             this.setState({
-                suggestions : r.data.map((tag) => {
+                suggestions: r.data.map((tag) => {
                     return {"id": tag.name, "text": tag.name}
                 })
             })
         });
         if (this.props.match.params.id) {
-            reviewService.getReview(this.props.match.params.id).then((response) => {
+            ReviewService.getReview(this.props.match.params.id).then((response) => {
                 let review = response.data;
                 this.setState({
                     title: review.title,
@@ -92,18 +92,17 @@ export default class ReviewFormComponent extends Component {
                             }).then(() => {
                                 if (this.state.initialImages.length === this.state.imageUrls.length)
                                     this.setState({
-                                        isLoaded: true
+                                        isImagesLoaded: true
                                     });
                             })
                         }))
                     })
                 } else this.setState({
-                    isLoaded : true
+                    isImagesLoaded: true
                 })
             })
-        }
-        else this.setState({
-            isLoaded : true
+        } else this.setState({
+            isImagesLoaded: true
         })
     }
 
@@ -133,9 +132,9 @@ export default class ReviewFormComponent extends Component {
 
     postReview() {
         if (this.props.match.params.id)
-            return reviewService.editReview(this.state.title, this.state.category, this.state.full_text, this.state.rating, this.state.imageUrls, this.state.tags, this.props.match.params.id);
+            return ReviewService.editReview(this.state.title, this.state.category, this.state.full_text, this.state.rating, this.state.imageUrls, this.state.tags, this.props.match.params.id);
         else
-            return reviewService.addReview(this.props.match.params.author, this.state.title, this.state.category, this.state.full_text, this.state.rating, this.state.imageUrls, this.state.tags);
+            return ReviewService.addReview(this.props.match.params.author, this.state.title, this.state.category, this.state.full_text, this.state.rating, this.state.imageUrls, this.state.tags);
     }
 
     handlePostReview(e) {
@@ -153,7 +152,7 @@ export default class ReviewFormComponent extends Component {
             })
             this.state.images.forEach(img => {
                 promises.push(
-                    imageService.upload(img).then(response => {
+                    ImageService.upload(img).then(response => {
                         console.log(response.data)
                         this.state.imageUrls.push(response.data.secure_url)
                     })
@@ -171,15 +170,16 @@ export default class ReviewFormComponent extends Component {
                     error => {
                         const resMessage =
                             (error.response &&
-                                error.response.data &&
-                                error.response.data.message) ||
-                            error.message ||
-                            error.toString();
+                                error.response.data);
                         this.setState({
                             loading: false,
                             successful: false,
                             message: resMessage
                         });
+                        console.log(error.response.data)
+                        console.log(error.response)
+                        console.log(error.message)
+                        console.log(error.toString())
                     }
                 );
             });
@@ -222,20 +222,15 @@ export default class ReviewFormComponent extends Component {
 
 
     render() {
-        const isLoaded = this.state.isLoaded;
-        //const { file } = this.state.images
+        const isImagesLoaded = this.state.isImagesLoaded;
         const initialImages = this.state.initialImages
         const handleChangeStatus = ({meta, file}, status) => {
-            // console.log(status, meta, file)
             if (status === "done") {
                 this.setState(
                     {images: [...this.state.images, file]}
                 )
-                // console.log(this.state.images.length)
-            }
-            else if (status === "removed") {
+            } else if (status === "removed") {
                 this.removeImage(file)
-                // console.log(this.state.images.length)
             }
         }
         const KeyCodes = {
@@ -244,7 +239,6 @@ export default class ReviewFormComponent extends Component {
         };
         const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
-        // console.log('here:', initialImages, initialImages.length)
         return (
             <div className="container mt-5 mb-5">
 
@@ -275,7 +269,7 @@ export default class ReviewFormComponent extends Component {
                             value={this.state.category}
                             onChange={this.onChangeCategory}>
                             {this.state.categories.map((category, key) => {
-                                return <option key = {key} value={category.name}>{category.name}</option>
+                                return <option key={key} value={category.name}>{category.name}</option>
                             })}
                         </select>
                     </div>
@@ -313,7 +307,7 @@ export default class ReviewFormComponent extends Component {
                     </div>
 
                     <div className="form-group">
-                        {isLoaded ? (
+                        {isImagesLoaded ? (
                             <React.Fragment>
                                 <label htmlFor="images">Put some images</label>
                                 <Dropzone
@@ -346,7 +340,12 @@ export default class ReviewFormComponent extends Component {
                                     ? "alert alert-success"
                                     : "alert alert-danger"
                             } role="alert">
-                                {this.state.message}
+                                {!this.state.successful ? this.state.message.map((msg, key) => {
+                                        return <p key={key}>{msg}</p>
+                                    })
+                                    :
+                                    this.state.message
+                                }
                             </div>
                         </div>
                     )}

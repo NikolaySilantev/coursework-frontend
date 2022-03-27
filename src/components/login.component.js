@@ -1,8 +1,9 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
 import AuthService from "../services/auth.service";
+
 const required = value => {
     if (!value) {
         return (
@@ -25,16 +26,19 @@ export default class Login extends Component {
             message: ""
         };
     }
+
     onChangeUsername(e) {
         this.setState({
             username: e.target.value
         });
     }
+
     onChangePassword(e) {
         this.setState({
             password: e.target.value
         });
     }
+
     handleLogin(e) {
         e.preventDefault();
         this.setState({
@@ -67,6 +71,7 @@ export default class Login extends Component {
             });
         }
     }
+
     render() {
         return (
             <div className="col-md-12">
@@ -123,7 +128,7 @@ export default class Login extends Component {
                             </div>
                         )}
                         <CheckButton
-                            style={{ display: "none" }}
+                            style={{display: "none"}}
                             ref={c => {
                                 this.checkBtn = c;
                             }}

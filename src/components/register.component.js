@@ -1,9 +1,10 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import Form from "react-validation/build/form";
 import Input from "react-validation/build/input";
 import CheckButton from "react-validation/build/button";
-import { isEmail } from "validator";
+import {isEmail} from "validator";
 import AuthService from "../services/auth.service";
+
 const required = value => {
     if (!value) {
         return (
@@ -55,21 +56,25 @@ export default class Register extends Component {
             message: ""
         };
     }
+
     onChangeUsername(e) {
         this.setState({
             username: e.target.value
         });
     }
+
     onChangeEmail(e) {
         this.setState({
             email: e.target.value
         });
     }
+
     onChangePassword(e) {
         this.setState({
             password: e.target.value
         });
     }
+
     handleRegister(e) {
         e.preventDefault();
         this.setState({
@@ -104,6 +109,7 @@ export default class Register extends Component {
             );
         }
     }
+
     render() {
         return (
             <div className="col-md-12">
@@ -174,7 +180,7 @@ export default class Register extends Component {
                             </div>
                         )}
                         <CheckButton
-                            style={{ display: "none" }}
+                            style={{display: "none"}}
                             ref={c => {
                                 this.checkBtn = c;
                             }}
